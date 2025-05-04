@@ -78,6 +78,68 @@ nav a{
  nav p{
     color: var(--icons)
  }
+ section{
+    width: 85%;
+    background: linear-gradient(var(--acsent-color), rgba(169, 207, 238, 0.5));
+    border-radius: 0 10px 10px 0px;
+    padding: 20px;
+    
+ }
+ header{
+    display: flex;
+    justify-content: space-between;
+ }
+
+ .search{
+    position: relative;
+    display: inline-block;
+    border-radius: 30px;
+    background-color: transparent;
+    width: 250px;
+    height: 30px;
+ }
+
+ .search i{
+    position: absolute;
+    left: 10px;
+    top: 30%;
+    color: var(--icons);
+ }
+ input[type="search"]{
+    border: 1px solid var(--icons);
+    border-radius: 30px;
+    background-color: transparent;
+    width: 250px;
+    height: 30px;
+    transition: 0.3s ease;
+    padding-left: 35px;
+ }
+ input[type="search"]:focus{
+  outline: none;
+  width: 255px;
+  height: 35px;
+  box-shadow: 1px 3px 6px rgb(205, 206, 206);
+ }
+
+ .settings{
+    display: flex;
+    color: var(--icons);
+    justify-content: space-between;
+    align-items: center;
+    width: 20%;
+ }
+
+ .settings button{
+    height: 25px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(125deg, red,rgb(241, 203, 203)) left;
+    color:white;
+ 
+
+
+ 
 .debugger{
     border: 1px solid red;
+   
 }
