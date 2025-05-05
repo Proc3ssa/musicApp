@@ -18,72 +18,13 @@ main{
     border-radius: 10px;
     
 }
-aside{
-    width: 15%;
-    padding: 10px;
-    background-color: var(--acsent-color);
-    /* display: flex;
-    flex-direction: column;
-    justify-content: center; */
-    border-radius: 10px;
-}
-aside i{
-    color: var(--icons);
-}
-.user{
-    margin: auto;
-    text-align: center;
-    line-height: 5px;
-    padding:10px ;
-}
 
-.user a{
-    text-decoration: none;
-    color: var(--icons);
-    font-size: 15px;
-}
-
-.user img{
-    width: 90px;
-    height: 90px;
-    border-radius: 360px;
-    box-shadow: 1px 3px 6px gray;
-}
-aside nav{
-    margin-top: 45px;
-    padding: 0;
-    text-align: left;
-}
-ul{
-    width: fit-content;
-    list-style-type: none;
-    margin-left: 5px;
-    padding-left: 0;
-}
-
-nav a{
-    text-decoration: none;
-    color: var(--text-color);
-    /* font-weight:600; */
-    margin-left: 7px;
-    font-size: 13px;
-}
- li{
-    text-decoration: none;
-    margin-block: 20px;
-    
- }
- a:hover{
-    color: var(--text-active);
- }
- nav p{
-    color: var(--icons)
- }
  section{
     width: 85%;
     background: linear-gradient(var(--acsent-color), rgba(169, 207, 238, 0.5));
     border-radius: 0 10px 10px 0px;
     padding: 20px;
+    margin-inline: auto;
     
  }
  header{
@@ -125,22 +66,13 @@ nav a{
  .settings{
     display: flex;
     color: var(--icons);
-    justify-content: space-between;
+    justify-content: right;
     align-items: center;
     width: 20%;
  }
 
- .settings button{
-    height: 25px;
-    border: none;
-    border-radius: 30px;
-    background: linear-gradient(125deg, red,rgb(241, 203, 203)) left;
-    color:white;
- }
  
- .settings button:hover{
-    height: 26px;
- }
+ 
 
  .settings i:hover{
     color: var(--text-color);
@@ -170,7 +102,7 @@ nav a{
    line-height: 5px;
    transition: 0.6 ease;
  }
- .slide p, .player p{
+ .slide p, .player p, .playlist p{
     color: var(--icons);
     font-size: 15px;
  }
@@ -200,6 +132,10 @@ nav a{
 }
 .player{
     width: 40%;
+}
+
+.player i{
+   color: var(--icons);
 }
 
 .outer{
@@ -238,6 +174,7 @@ nav a{
 }
 .playlist{
     width: 60%;
+    overflow: hidden;
 }
 progress{
    width: 90%;
@@ -253,8 +190,59 @@ progress{
    width: 75%;
    margin: 30px auto 10px auto;
    display: flex;
-   justify-content: space-around;
+   justify-content: space-between
 }
+.controls button{
+   background-color: transparent;
+   border: 1px solid transparent;
+   font-size: 20px;
+}
+button.play{
+   background-color: white;
+   height: 30px;
+   width: 30px;
+   border-radius: 360px;
+   color: var(--text-active);
+}
+
+.song{
+   background-color: var(--acsent-color);
+   border-radius: 5px;
+   width: 95%;
+   height: 55px;
+   margin-inline: auto;
+   margin-block: 10px;
+   box-shadow: 0 4px 12px rgba(128, 128, 128, 0.075);
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding-inline: 10px;
+   transition: 0.4s ease;
+}
+.song:hover{
+   box-shadow: 0 4px 12px rgba(128, 128, 128, 0.384);
+   width: 101%;
+   height: 56px;
+
+}
+.namePic{
+   width: 30%;
+}
+.namePic{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+.namePic img{
+   border-radius: 5px;
+}
+.artiste{
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   width: 60%;
+}
+
 
  
 .debugger{
