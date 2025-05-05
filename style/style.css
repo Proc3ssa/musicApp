@@ -174,7 +174,18 @@ main{
 }
 .playlist{
     width: 60%;
-    overflow: hidden;
+    height: 400px;
+   
+}
+.list{
+   overflow-x: hidden;
+   height: 340px;
+   -ms-overflow-style:none;
+   scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar{
+   display: none;
 }
 progress{
    width: 90%;
