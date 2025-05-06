@@ -102,7 +102,7 @@ main{
    line-height: 5px;
    transition: 0.6 ease;
  }
- .slide p, .player p, .playlist p{
+ .slide p, .player p, .playlist p, .fa-play, .fa-heart{
     color: var(--icons);
     font-size: 15px;
  }
@@ -155,7 +155,16 @@ main{
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
+   animation: spin 5s linear infinite;
+
 }
+
+ 
+ @keyframes spin {
+   0%   { transform: rotate(0deg); }
+   100% { transform: rotate(360deg); }
+ }
+ 
 .disM{
     width: 40%;
     aspect-ratio: 1/1;
@@ -210,10 +219,20 @@ progress{
 }
 button.play{
    background-color: white;
-   height: 30px;
-   width: 30px;
+   height: 40px;
+   width: 40px;
    border-radius: 360px;
-   color: var(--text-active);
+   color: blue;
+   box-shadow: 0 5px 12px rgb(173, 173, 173);
+   
+}
+button.play:hover{
+   height: 41px;
+   width: 41px;
+}
+
+.fa-forward:hover, .fa-backward:hover{
+
 }
 
 .song{
@@ -260,3 +279,53 @@ button.play{
     border: 1px solid red;
    
 }
+
+/* Add these styles to your style.css file */
+
+/* Playlist song styling */
+.playlist .song {
+   cursor: pointer;
+   transition: all 0.3s ease;
+   margin-bottom: 10px;
+   padding: 5px;
+   border-radius: 8px;
+ }
+ 
+ .playlist .song:hover {
+   background-color: rgba(255, 255, 255, 0.658);
+ }
+ 
+ /* Active song styling */
+ .playlist .song.active {
+   background-color: rgba(196, 210, 248, 0.836);
+   box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+ }
+ 
+ .playlist .song.active .namePic b,
+ .playlist .song.active .namePic i,
+ .playlist .song.active .artiste p {
+   color:var(--text-color);
+   font-weight: bold;
+ }
+ 
+ /* Animation for the disc */
+ @keyframes rotate {
+   from {
+     transform: rotate(0deg);
+   }
+   to {
+     transform: rotate(360deg);
+   }
+ }
+ 
+ .disc {
+   transition: all 0.5s ease;
+ }
+ 
+ .disc:not(.rotate) {
+   animation: rotate 15s linear infinite;
+ }
+ 
+ .rotate {
+   animation-play-state: paused;
+ }
