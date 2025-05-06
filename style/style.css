@@ -367,4 +367,51 @@ button.play:hover{
    background: #4caf50;
    cursor: pointer;
  }
+
+ @media(max-width: 1024px) {
+
+   main{
+      width: 95%;
+   }
+ .music{
+   flex-direction: column;
+ }
+
+ .player,.playlist{
+   width: 100%;
+   margin-inline: auto;
+ }
+
+ .inner{
+   height: fit-content;
+   padding-bottom: 10px;
+ }
+
+ .slides{
+   display: flex;
+   overflow-x: auto;
+   gap: 10px;
+   scroll-behavior: smooth;
+   -ms-overflow-style:none;
+   scrollbar-width: none;
+}
+
+.slides::-webkit-scrollbar{
+   display: none;
+}
+.slide{
+   flex: 0 0 auto;
+   width: 150px;
+   height: 200px;
+}
+
+input[type="search"]{
+   
+   width: 80%;
+   
+   
+}
+
+
+ }
  
