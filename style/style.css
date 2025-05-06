@@ -256,7 +256,7 @@ button.play:hover{
 
 }
 .namePic{
-   width: 30%;
+   width: 40%;
 }
 .namePic{
    display: flex;
@@ -266,11 +266,23 @@ button.play:hover{
 .namePic img{
    border-radius: 5px;
 }
+
 .artiste{
    display: flex;
    justify-content: space-between;
    align-items: center;
-   width: 60%;
+   width: 35%;
+}
+
+.artist{
+   width: 40%;
+}
+.duration{
+   width: 20%;
+}
+
+.artiste i{
+   width: 10%;
 }
 
 
@@ -386,10 +398,26 @@ button.play:hover{
    height: fit-content;
    padding-bottom: 10px;
  }
+ .artiste{
+   display: flex;
+   justify-content: space-between;
+   width: 45%;
+   margin-right: 5px;
+ }
+
+ 
+ .ar, .duration{
+   width: 40%;
+
+ }
+ .duration{
+   text-align: right;
+ }
 
  .slides{
    display: flex;
    overflow-x: auto;
+   height: fit-content;
    gap: 10px;
    scroll-behavior: smooth;
    -ms-overflow-style:none;
@@ -411,6 +439,8 @@ input[type="search"]{
    
    
 }
+
+
 
 
  }

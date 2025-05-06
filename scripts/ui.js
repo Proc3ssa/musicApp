@@ -59,9 +59,8 @@ export const renderPlaylist = (playlist, currentTrackIndex, onSongClick) => {
         <b>${track.title}</b>
       </div>
       <div class="artiste">
-        <p>${track.artist}</p>
-        <p>${track.duration}</p>
-        <i class="fa fa-heart"></i>
+        <p class="ar">${track.artist}</p>
+        <p class="duration">${track.duration}</p>
       </div>
     `;
     
