@@ -115,6 +115,7 @@ main{
     height: 100%;
     border-radius: 15px;
     box-shadow: 1px 5px 8px gray;
+    object-fit: cover;
  }
 
  .pic img:hover{
