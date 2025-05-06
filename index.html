@@ -14,38 +14,145 @@
 <main>
 
     
-<aside class="">
 
-    <div class="user">
-        <img src="./assets/images/roomdesign4.jpg" alt="user display picture ">
-        <h3>Faisal Halid</h3>
-        <a href="https://mailto:faisalhalid@amalitechtraining.or" >faisal@amalitech.org</a>
+
+<section>
+    <!-- <h1 align="center">FaisalPlay</h1> -->
+    <header>
+        <div class="search ">
+            <i class="fas fa-search"></i>
+            <input type="search" placeholder="search for songs, artiste etc..">
+        </div>
+
+        <div class="settings">
+            
+                   <i class="fa fa-moon"></i>
+
+            
+        </div>
+    </header>
+
+    <div class="slider">
+        <div class="title">
+            <h2>Artistes</h2>
+            
+        </div>
+
+        <div class="slides">
+            <div class="slide">
+
+                <div class="pic"><img src="./assets/images/roomdesign4.jpg" alt=""></div>
+                <b>Suraul Furkan</b>
+                <p>Sheikh Shuraim</p>
+
+            </div>
+
+            <div class="slide">
+
+                <div class="pic"><img src="./assets/images/roomdesign4.jpg" alt=""></div>
+                <b>Suraul Furkan</b>
+                <p>Sheikh Shuraim</p>
+
+            </div>
+
+            <div class="slide">
+
+                <div class="pic"><img src="./assets/images/roomdesign4.jpg" alt=""></div>
+                <b>Suraul Furkan</b>
+                <p>Sheikh Shuraim</p>
+
+            </div>
+
+            <div class="slide">
+
+                <div class="pic"><img src="./assets/images/roomdesign4.jpg" alt=""></div>
+                <b>Suraul Furkan</b>
+                <p>Sheikh Shuraim</p>
+
+            </div>
+
+           
+        </div>
     </div>
 
-    <nav class="">
-       <ul class="">
-        <li> <i class="fas fa-home"></i><a href="home">Home</a></li>
-        <li><i class="fas fa-folder"></i><a href="browse">Browse</a></li>
-        <li><i class="fas fa-file"></i><a href="album">Album</a></li>
-        <li><i class="fas fa-user"></i><a href="artiste">Artiste</a></li>
-        <li><i class="fas fa-video"></i><a href="videos">Videos</a></li>
-        
-       </ul>
+    <!-- music -->
 
-       <nav class="music">
+    <div class="music">
+        <div class="player">
+            <h2>
+                Now playing
+            </h2>
+            <p>.</p>
 
-        <p>MY MUSIC</p>
-        <ul>
-             <li><i class="fas fa-clock"></i><a href="artiste">Recently Played</a></li>
-        <li><i class="fas fa-file"></i><a href="videos">Local files</a></li>
-        </ul>
-       
-       </nav>
+            <div class="outer">
+                <div class="inner">
+                    <div class="disc" style="background-image: url(./assets/images/roomdesign4.jpg);">
+                        <div class="disM"></div>
 
-    </nav>
+                    </div>
+                    <b>Sheikh sudais</b>
+                    <p>Furkan</p>
+                    <progress max="100" value="25"></progress>
+                    <div class="times">
+                        <small>2:40</small>
+                        <small>2:40</small>
+                    </div>
 
-</aside>
+                </div>
+
+                <div class="controls">
+                     
+                     <button><i class="fa fa-backward"></i></button>
+
+                     <button class="play debugger"><i class="fa fa-play"></i></button>
+
+                     <button><i class="fa fa-forward"></i></button>
+
+                     <div class="volume-control">
+                        <div class="volume-icon">
+                          <i class="fa fa-volume-up"></i>
+                        </div>
+                        <input type="range" class="volume-slider" min="0" max="100" value="100">
+                      </div>
+
+                     
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="playlist">
+            <h2>Playlist</h2>
+            <p>55 songs on the playlist</p>
+
+            <div class="list">
+                <div class="song">
+                    <div class="namePic">
+                        <b>01</b>
+                        <img src="./assets/images/roomdesign4.jpg" alt="album cover" height="40px" width="40px">
+                        <i class="fa fa-play"></i>
+                        <b>Name</b>
+                    </div>
+    
+                    <div class="artiste">
+                        <p class="artist">Sudais</p>
+                        <p class="duration">3:33</p>
+                        <i class="fa fa-heart"></i>
+    
+                    </div>
+    
+                </div>
+            </div>
+    </div>
+    </div>
+
+
+</section>
 
 </main>
+
+<script type="module" src="./scripts/main.js"></script>
+<script type="module" src="./scripts/theme.js"></script>
+
 </body>
 </html>
