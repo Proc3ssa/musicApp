@@ -1,4 +1,4 @@
-// ui.js
+// ui.js - Updated with volume control functionality
 export const updateNowPlaying = (track) => {
   document.querySelector(".inner b").textContent = track.artist;
   document.querySelector(".inner p").textContent = track.title;
@@ -15,6 +15,25 @@ export const updateProgress = (current, duration) => {
     progressBar.value = current;
     start.textContent = formatTime(current);
     end.textContent = formatTime(duration);
+  }
+};
+
+export const updateVolumeUI = (volume, isMuted) => {
+  const volumeSlider = document.querySelector('.volume-slider');
+  const volumeIcon = document.querySelector('.volume-icon i');
+  
+  if (volumeSlider) {
+    volumeSlider.value = volume * 100;
+  }
+  
+  if (volumeIcon) {
+    if (isMuted || volume === 0) {
+      volumeIcon.className = 'fa fa-volume-mute';
+    } else if (volume < 0.5) {
+      volumeIcon.className = 'fa fa-volume-down';
+    } else {
+      volumeIcon.className = 'fa fa-volume-up';
+    }
   }
 };
 
@@ -79,3 +98,15 @@ const formatTime = (seconds) => {
   const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
   return `${mins}:${secs}`;
 };
+
+// Export for Jest testing
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    updateNowPlaying,
+    updateProgress,
+    updateVolumeUI,
+    renderPlaylist,
+    highlightCurrentTrack,
+    formatTime: formatTime // Also export the helper function for testing
+  };
+}

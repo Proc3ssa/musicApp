@@ -329,3 +329,42 @@ button.play:hover{
  .rotate {
    animation-play-state: paused;
  }
+
+ .volume-control {
+   display: flex;
+   align-items: center;
+   margin-left: 10px;
+ }
+ 
+ .volume-icon {
+   cursor: pointer;
+   margin-right: 8px;
+ }
+ 
+ .volume-slider {
+   -webkit-appearance: none;
+   width: 80px;
+   height: 5px;
+   border-radius: 5px;
+   background: #d3d3d3;
+   outline: none;
+ }
+ 
+ .volume-slider::-webkit-slider-thumb {
+   -webkit-appearance: none;
+   appearance: none;
+   width: 15px;
+   height: 15px;
+   border-radius: 50%;
+   background: #4caf50;
+   cursor: pointer;
+ }
+ 
+ .volume-slider::-moz-range-thumb {
+   width: 15px;
+   height: 15px;
+   border-radius: 50%;
+   background: #4caf50;
+   cursor: pointer;
+ }
+ 

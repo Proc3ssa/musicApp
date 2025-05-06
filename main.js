@@ -1,14 +1,19 @@
 import { playlist } from './playlist.js';
-import { setTrack, playAudio, pauseAudio, onTimeUpdate, getAudio, isPlaying } from './player.js';
-import { updateNowPlaying, updateProgress, renderPlaylist, highlightCurrentTrack } from './ui.js';
+import { setTrack, playAudio, pauseAudio, onTimeUpdate, getAudio, isPlaying, 
+         setVolume, getVolume, toggleMute } from './player.js';
+import { updateNowPlaying, updateProgress, renderPlaylist, highlightCurrentTrack, updateVolumeUI } from './ui.js';
 
 let currentTrackIndex = 0;
 let isPlayingState = false;
+let isMuted = false;
+let currentVolume = 1.0; // Default to full volume
 
 const playBtn = document.querySelector(".controls .play");
 const prevBtn = document.querySelector(".controls button:nth-child(1)");
 const nextBtn = document.querySelector(".controls button:nth-child(3)");
-const disk = document.querySelector(".disc"); 
+const disk = document.querySelector(".disc");
+const volumeBtn = document.querySelector(".volume-icon");
+const volumeSlider = document.querySelector(".volume-slider");
 
 const loadAndPlayTrack = () => {
   const track = playlist[currentTrackIndex];
@@ -40,10 +45,25 @@ const handlePlaylistItemClick = (index) => {
   }
 };
 
+// Handle volume change
+const handleVolumeChange = (value) => {
+  currentVolume = value / 100; // Convert from percentage to decimal
+  setVolume(currentVolume);
+  isMuted = currentVolume === 0;
+  updateVolumeUI(currentVolume, isMuted);
+};
+
+// Handle mute toggle
+const handleMuteToggle = () => {
+  isMuted = toggleMute();
+  updateVolumeUI(currentVolume, isMuted);
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   // Render the playlist initially
   renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick);
   
+  // Set up play/pause button
   playBtn.addEventListener("click", () => {
     if (isPlayingState) {
       pauseAudio();
@@ -63,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Set up navigation buttons
   nextBtn.addEventListener("click", () => {
     currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
     loadAndPlayTrack();
@@ -72,6 +93,20 @@ document.addEventListener("DOMContentLoaded", () => {
     currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
     loadAndPlayTrack();
   });
+
+  // Set up volume controls
+  if (volumeBtn) {
+    volumeBtn.addEventListener("click", handleMuteToggle);
+  }
+  
+  if (volumeSlider) {
+    volumeSlider.addEventListener("input", (e) => {
+      handleVolumeChange(e.target.value);
+    });
+  }
+
+  // Initialize volume
+  updateVolumeUI(currentVolume, isMuted);
 
   onTimeUpdate(updateProgress);
 
@@ -87,3 +122,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial load
   loadAndPlayTrack();
 });
+
+// Export for Jest testing
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    loadAndPlayTrack,
+    handlePlaylistItemClick,
+    handleVolumeChange,
+    handleMuteToggle
+  };
+}
