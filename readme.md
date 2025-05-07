@@ -1,6 +1,13 @@
-# Music Application
+# Music Player
 
 A simple web-based music player application built with HTML, CSS, and JavaScript.
+
+## Screenshots
+
+Here are some screenshots of the music player:
+
+![Screenshot 1](assets/images/screenshot.png)
+
 
 ## Features
 
@@ -84,3 +91,5 @@ The project uses Jest for unit testing.
   ```
 
 Test files are located in the `test/` directory and correspond to the modules in the `scripts/` directory.
+
+
