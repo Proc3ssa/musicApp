@@ -14,7 +14,6 @@ export const onTimeUpdate = (callback) => {
 
 // Volume control functions
 export const setVolume = (level) => {
-  // Ensure volume is between 0 and 1
   const volumeLevel = Math.max(0, Math.min(1, level));
   audio.volume = volumeLevel;
   return volumeLevel;
@@ -40,7 +39,7 @@ export const toggleMute = () => {
 export const isPlaying = () => !audio.paused;
 export const getAudio = () => audio;
 
-// Export for Jest testing
+// This block allows Jest (a Node.js environment) to import these functions using require()
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     setTrack,
