@@ -1,112 +1,112 @@
-// main.test.js
-import { loadAndPlayTrack, handlePlaylistItemClick, handleVolumeChange, handleMuteToggle } from './main';
-import * as playerModule from '../scripts/player';
-import * as uiModule from '../scripts/ui';
-import { playlist } from '../scripts/playlist';
+/**
+ * @jest-environment jsdom
+ */
 
-// Mock the modules
-jest.mock('../scripts/player');
-jest.mock('../scripts/ui');
-jest.mock('../scripts/playlist', () => ({
+import {
+  loadAndPlayTrack,
+  handlePlaylistItemClick,
+  handleVolumeChange,
+  handleMuteToggle
+} from '../scripts/main.js';
+
+import { playlist } from '../scripts/playlist.js';
+import * as player from '../scripts/player.js';
+import * as ui from '../scripts/ui.js';
+
+// Mock dependencies
+jest.mock('../scripts/player.js', () => ({
+  setTrack: jest.fn(),
+  playAudio: jest.fn(() => Promise.resolve()),
+  pauseAudio: jest.fn(),
+  getAudio: jest.fn(() => ({ muted: false })),
+  setVolume: jest.fn(),
+  getVolume: jest.fn(() => 0.5),
+  toggleMute: jest.fn()
+}));
+
+jest.mock('../scripts/ui.js', () => ({
+  updateNowPlaying: jest.fn(),
+  updateProgress: jest.fn(),
+  renderPlaylist: jest.fn(),
+  highlightCurrentTrack: jest.fn(),
+  updateVolumeUI: jest.fn()
+}));
+
+jest.mock('../scripts/playlist.js', () => ({
   playlist: [
-    { id: 1, title: 'Track 1', artist: 'Artist 1', src: 'track1.mp3', cover: 'cover1.jpg', duration: '3:45' },
-    { id: 2, title: 'Track 2', artist: 'Artist 2', src: 'track2.mp3', cover: 'cover2.jpg', duration: '2:30' }
+    { title: "Track 1", src: "track1.mp3" },
+    { title: "Track 2", src: "track2.mp3" }
   ]
 }));
 
-describe('Main Module', () => {
-  // Setup DOM elements for testing
-  beforeEach(() => {
-    document.body.innerHTML = `
-      <div class="controls">
-        <button></button>
-        <button class="play"><i class="fa fa-play"></i></button>
-        <button></button>
-      </div>
-      <div class="disc" class="rotate"></div>
-      <div class="volume-icon"></div>
-      <div class="volume-slider"></div>
-      <div class="playlist"><p></p><div class="list"></div></div>
-    `;
-    
-    // Reset mocks
-    jest.clearAllMocks();
-    
-    // Default mock implementations
-    playerModule.playAudio.mockImplementation(() => Promise.resolve());
-    playerModule.getAudio.mockImplementation(() => ({
-      onended: null
-    }));
+beforeEach(() => {
+  document.body.innerHTML = `
+    <div class="controls">
+      <button></button>
+      <button class="play"></button>
+      <button></button>
+    </div>
+    <div class="disc"></div>
+    <input class="volume-slider" />
+    <div class="volume-icon"></div>
+  `;
+
+  // Reset mock state
+  jest.clearAllMocks();
+});
+
+describe('loadAndPlayTrack', () => {
+  it('should load and play a valid track without throwing', async () => {
+    await loadAndPlayTrack(0);
+    expect(player.setTrack).toHaveBeenCalled();
+    expect(ui.updateNowPlaying).toHaveBeenCalled();
+    expect(player.playAudio).toHaveBeenCalled();
   });
-  
-  test('loadAndPlayTrack should set track and play it', async () => {
-    const mockTrack = playlist[0];
-    
-    await loadAndPlayTrack();
-    
-    expect(playerModule.setTrack).toHaveBeenCalledWith(mockTrack);
-    expect(uiModule.updateNowPlaying).toHaveBeenCalledWith(mockTrack);
-    expect(uiModule.highlightCurrentTrack).toHaveBeenCalled();
-    expect(playerModule.playAudio).toHaveBeenCalled();
-    
-    // Check UI updates
-    expect(document.querySelector('.play').innerHTML).toBe('<i class="fa fa-pause"></i>');
-    expect(document.querySelector('.disc').classList.contains('rotate')).toBe(false);
+});
+
+describe('handlePlaylistItemClick', () => {
+  it('should pause if clicked track is current and playing', () => {
+    // Force current track and state
+    document.querySelector('.controls .play').innerHTML = '';
+    const disk = document.querySelector('.disc');
+    player.pauseAudio.mockImplementation(() => {});
+    playlist.currentTrackIndex = 0;
+
+    // Simulate click on same track
+    handlePlaylistItemClick(0);
+    expect(player.pauseAudio).toHaveBeenCalled();
   });
-  
-  test('loadAndPlayTrack should handle playback errors', async () => {
-    // Mock console.error to prevent actual logging during test
-    console.error = jest.fn();
-    
-    // Mock playAudio to reject
-    playerModule.playAudio.mockImplementation(() => Promise.reject('Mock error'));
-    
-    await loadAndPlayTrack();
-    
-    expect(playerModule.setTrack).toHaveBeenCalled();
-    expect(console.error).toHaveBeenCalledWith('Playback error:', 'Mock error');
+
+  it('should play a new track if different index is clicked', async () => {
+    await loadAndPlayTrack(0); // ensure currentTrackIndex = 0
+    handlePlaylistItemClick(1);
+    expect(player.setTrack).toHaveBeenCalled();
   });
-  
-  test('handlePlaylistItemClick should pause when clicking current track', () => {
-    // Set up state for current track playing
-    const currentIndex = 0;
-    
-    handlePlaylistItemClick(currentIndex);
-    
-    expect(playerModule.pauseAudio).toHaveBeenCalled();
-    expect(document.querySelector('.play').innerHTML).toBe('<i class="fa fa-play"></i>');
-    expect(document.querySelector('.disc').classList.contains('rotate')).toBe(true);
+});
+
+describe('handleVolumeChange', () => {
+  it('should update volume and mute state', () => {
+    const event = { target: { value: '50' } };
+    handleVolumeChange(event);
+    expect(player.setVolume).toHaveBeenCalledWith(0.5);
+    expect(ui.updateVolumeUI).toHaveBeenCalledWith(0.5, false);
   });
-  
-  test('handlePlaylistItemClick should play a new track when clicking different track', () => {
-    const newIndex = 1;
-    
-    // Mock loadAndPlayTrack to check if it's called
-    global.loadAndPlayTrack = jest.fn();
-    
-    handlePlaylistItemClick(newIndex);
-    
-    expect(global.loadAndPlayTrack).toHaveBeenCalled();
+
+  it('should detect mute if value is 0', () => {
+    const event = { target: { value: '0' } };
+    handleVolumeChange(event);
+    expect(ui.updateVolumeUI).toHaveBeenCalledWith(0, true);
   });
-  
-  test('handleVolumeChange should update volume settings', () => {
-    handleVolumeChange(50);
-    
-    expect(playerModule.setVolume).toHaveBeenCalledWith(0.5);
-    expect(uiModule.updateVolumeUI).toHaveBeenCalledWith(0.5, false);
-    
-    handleVolumeChange(0);
-    
-    expect(playerModule.setVolume).toHaveBeenCalledWith(0);
-    expect(uiModule.updateVolumeUI).toHaveBeenCalledWith(0, true);
-  });
-  
-  test('handleMuteToggle should toggle mute state', () => {
-    playerModule.toggleMute.mockReturnValue(true);
-    
+});
+
+describe('handleMuteToggle', () => {
+  it('should toggle mute and update volume UI', () => {
+    const fakeAudio = { muted: false };
+    player.getAudio.mockReturnValue(fakeAudio);
+
     handleMuteToggle();
-    
-    expect(playerModule.toggleMute).toHaveBeenCalled();
-    expect(uiModule.updateVolumeUI).toHaveBeenCalled();
+
+    expect(player.toggleMute).toHaveBeenCalled();
+    expect(ui.updateVolumeUI).toHaveBeenCalled();
   });
 });

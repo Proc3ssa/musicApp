@@ -1,6 +1,13 @@
-# Music Application
+# Music Player
 
 A simple web-based music player application built with HTML, CSS, and JavaScript.
+
+## Screenshots
+
+Here are some screenshots of the music player:
+
+![Screenshot 1](assets/images/screenshot.png)
+
 
 ## Features
 
@@ -52,7 +59,9 @@ Open the `index.html` file in your web browser to run the application.
 
 ## Challenges
 
-(Default section - add your own challenges here)
+1. **Resposiveness:** Hard to create mobile view as the components were too many for the screen size.
+2. **Playlist sync:** I was challenging to higlight the current song playing in the playlist.
+3. **Implementing dark theme:** Dark theme implementation was challenging.
 
 ## Git Workflow
 
@@ -82,3 +91,10 @@ The project uses Jest for unit testing.
   ```
 
 Test files are located in the `test/` directory and correspond to the modules in the `scripts/` directory.
+
+
+**Author:** 
+![Faisal](https://github.com/proc3ssa)
+
+
+
