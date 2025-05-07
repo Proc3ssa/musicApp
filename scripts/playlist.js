@@ -81,7 +81,7 @@ export const playlist = [
       src: "./audio/108.mp3",
       cover: "./assets/images/sudais.JPG",
       duration: "00:25"
-    },
+    }
 ];
 
 // This block allows Jest (a Node.js environment) to import the playlist using require()
