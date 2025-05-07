@@ -93,7 +93,7 @@ The project uses Jest for unit testing.
 Test files are located in the `test/` directory and correspond to the modules in the `scripts/` directory.
 
 
-**Autor:** 
+**Author:** 
 ![Faisal](https://github.com/proc3ssa)
 
 
