@@ -115,6 +115,7 @@ main{
     height: 100%;
     border-radius: 15px;
     box-shadow: 1px 5px 8px gray;
+    object-fit: cover;
  }
 
  .pic img:hover{
@@ -255,22 +256,37 @@ button.play:hover{
    height: 56px;
 
 }
-.namePic{
-   width: 30%;
-}
+
 .namePic{
    display: flex;
    align-items: center;
-   justify-content: space-between;
+   justify-content: space-between; 
+   width: 40%;
 }
 .namePic img{
    border-radius: 5px;
 }
+
+.namePic > b, .namePic i{
+   width: 15%;
+}
+
 .artiste{
    display: flex;
    justify-content: space-between;
    align-items: center;
-   width: 60%;
+   width: 35%;
+}
+
+.artist{
+   width: 40%;
+}
+.duration{
+   width: 20%;
+}
+
+.artiste i{
+   width: 10%;
 }
 
 
@@ -366,5 +382,70 @@ button.play:hover{
    border-radius: 50%;
    background: #4caf50;
    cursor: pointer;
+ }
+
+ @media(max-width: 1024px) {
+
+   main{
+      width: 95%;
+   }
+ .music{
+   flex-direction: column;
+ }
+
+ .player,.playlist{
+   width: 100%;
+   margin-inline: auto;
+ }
+
+ .inner{
+   height: fit-content;
+   padding-bottom: 10px;
+ }
+ .artiste{
+   display: flex;
+   justify-content: space-between;
+   width: 45%;
+   margin-right: 5px;
+ }
+
+ 
+ .ar, .duration{
+   width: 40%;
+
+ }
+ .duration{
+   text-align: right;
+ }
+
+ .slides{
+   display: flex;
+   overflow-x: auto;
+   height: fit-content;
+   gap: 10px;
+   scroll-behavior: smooth;
+   -ms-overflow-style:none;
+   scrollbar-width: none;
+}
+
+.slides::-webkit-scrollbar{
+   display: none;
+}
+.slide{
+   flex: 0 0 auto;
+   width: 150px;
+   height: 200px;
+}
+
+input[type="search"]{
+   
+   width: 80%;
+   
+   
+}
+
+
+
+
  }
  
