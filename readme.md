@@ -52,7 +52,9 @@ Open the `index.html` file in your web browser to run the application.
 
 ## Challenges
 
-(Default section - add your own challenges here)
+1. **Resposiveness:** Hard to create mobile view as the components were too many for the screen size.
+2. **Playlist sync:** I was challenging to higlight the current song playing in the playlist.
+3. **Implementing dark theme:** Dark theme implementation was challenging.
 
 ## Git Workflow
 
