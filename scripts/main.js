@@ -132,6 +132,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick);
 
+    // Add event listeners to slide divs
+    const slideElements = document.querySelectorAll('.slide');
+    slideElements.forEach(slide => {
+        slide.addEventListener('click', () => {
+            // Extract artist name from class list (excluding 'slide')
+            const artistClass = Array.from(slide.classList).find(className => className !== 'slide');
+            if (artistClass) {
+                // Filter the playlist by artist
+                const filteredPlaylist = playlist.filter(track => track.artist === artistClass);
+                renderPlaylist(filteredPlaylist, 0, handlePlaylistItemClick); // Render filtered playlist, start at index 0
+                // Optionally, update the playlist count text
+                const playlistInfoElement = document.querySelector('.playlist p');
+                if (playlistInfoElement) {
+                    playlistInfoElement.textContent = `${filteredPlaylist.length} items by ${artistClass}`;
+                }
+            }
+        });
+    });
+
     if (playBtn) playBtn.addEventListener("click", handlePlayPause);
     if (nextBtn) nextBtn.addEventListener("click", handleNextTrack);
     if (prevBtn) prevBtn.addEventListener("click", handlePrevTrack);
