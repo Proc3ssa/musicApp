@@ -19,6 +19,19 @@ main{
     
 }
 
+.settings button{
+   border: none;
+   padding: 6px;
+   border-radius: 5px;
+   color: black;
+   background: linear-gradient(rgba(107, 150, 230, 0.5), rgba(181, 201, 240, 0.5));
+}
+
+.settings button:hover{
+  padding: 7px;
+  box-shadow: 1px 5px 8px rgba(128, 128, 128, 0.363);
+}
+
  section{
     width: 85%;
     background: linear-gradient(var(--acsent-color), rgba(169, 207, 238, 0.5));
