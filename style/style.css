@@ -76,6 +76,9 @@ main{
     border-radius: 10px;
     
 }
+.search img{
+    width:90px;
+}
 
 .settings button{
    border: none;
