@@ -1,4 +1,3 @@
-// player.js - Updated with volume functionality
 let audio = new Audio();
 
 export const setTrack = (track) => {
@@ -39,7 +38,7 @@ export const toggleMute = () => {
 export const isPlaying = () => !audio.paused;
 export const getAudio = () => audio;
 
-// This block allows Jest (a Node.js environment) to import these functions using require()
+//import these functions using require()
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     setTrack,

@@ -1,6 +1,5 @@
-// ui.js - Updated with volume control functionality
+//Bismillah
 
-// Helper function (not exported directly to browser, but used by exported functions)
 const formatTime = (seconds) => {
   if (isNaN(seconds) || seconds < 0) seconds = 0;
   const mins = Math.floor(seconds / 60);
@@ -82,16 +81,11 @@ export const renderPlaylist = (playlistData, currentTrackIndex, onSongClick) => 
       </div>
     `;
 
-    songElement.addEventListener('click', () => onSongClick(index));
+    songElement.addEventListener('click', () => onSongClick(index, playlistData)); // Passing playlistData to the click handler
     playlistContainer.appendChild(songElement);
   });
   
-  // The original code for playlist count had an issue:
-  // const countElements = document.querySelectorAll('.artist'); 
-  // This targeted elements within each song item.
-  // Assuming you meant to update a general playlist info text:
-  // This logic was previously in main.js and is better placed there
-  // or passed in if ui.js needs to update it.
+  return playlistData; // Return the playlist data that was rendered
 };
 
 export const highlightCurrentTrack = (index) => {
@@ -114,14 +108,14 @@ export const highlightCurrentTrack = (index) => {
   }
 };
 
-// This block allows Jest (a Node.js environment) to import these functions using require()
+//export for testinf
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     updateNowPlaying,
     updateProgress,
-    updateVolumeUI,
     renderPlaylist,
     highlightCurrentTrack,
-    formatTime // Also export formatTime for testing as it was in your original conditional export
+    formatTime, 
+     updateVolumeUI 
   };
 }

@@ -17,17 +17,31 @@
 
 
 <section>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+          <span class="close" id="closeModalBtn">&times;</span>
+          <form class="modal-form">
+            <h3>Add New Song</h3>
+            <input type="text" id="songTitle" placeholder="Song Title" required />
+            <input type="text" id="songArtist" placeholder="Artist" required />
+            <label for="songSrc">Audio File:</label>
+            <input type="file" id="songSrc" accept="audio/*" required />
+            <label for="songCover">Cover Image:</label>
+            <input type="file" id="songCover" accept="image/*" required />
+            <button type="submit">Add Song</button>
+          </form>
+        </div>
+      </div>
     <!-- <h1 align="center">FaisalPlay</h1> -->
     <header>
         <div class="search ">
-            <i class="fas fa-search"></i>
-            <input type="search" placeholder="search for songs, artiste etc..">
+           <img src="./assets/images/logo.png" alt="logo">
         </div>
 
         <div class="settings">
             
-                   <i class="fa fa-moon"></i>
-
+           <button id="openModalBtn"><i class="fa fa-plus"></i> Add New Song
+            </button>
             
         </div>
     </header>
@@ -39,37 +53,6 @@
         </div>
 
         <div class="slides">
-            <div class="slide">
-
-                <div class="pic"><img src="./assets/images/toure.JPG" alt=""></div>
-                
-                <b>Haady Toure</b>
-
-            </div>
-
-            <div class="slide">
-
-                <div class="pic"><img src="./assets/images/husarey.WEBP" alt=""></div>
-                
-                <b>Khaleel Husarey</b>
-
-            </div>
-
-            <div class="slide">
-
-                <div class="pic"><img src="./assets/images/walk.JPG" alt=""></div>
-                <b>Ibrahim Walk</b>
-
-            </div>
-
-            <div class="slide">
-
-                <div class="pic"><img src="./assets/images/sudais.JPG" alt=""></div>
-                <b>Sheikh Sudais</b>
-
-            </div>
-
-           
         </div>
     </div>
 
@@ -149,6 +132,7 @@
 </main>
 
 <script type="module" src="./scripts/main.js"></script>
+
 
 </body>
 </html>

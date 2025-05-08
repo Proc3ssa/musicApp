@@ -11,9 +11,9 @@ let currentTrackIndex = 0;
 let isPlayingState = false;
 let isMuted = false;
 let currentVolume = 1.0;
+let currentRenderedPlaylist = []; 
 
-// It's good practice to declare these here and assign in DOMContentLoaded
-// To avoid errors if script runs before DOM is ready
+
 let playBtn, prevBtn, nextBtn, disk, volumeBtn, volumeSlider;
 
 const initializeDOMElements = () => {
@@ -25,42 +25,54 @@ const initializeDOMElements = () => {
     volumeSlider = document.querySelector(".volume-slider");
 };
 
-const actualLoadAndPlayTrack = (trackIndexToLoad) => {
-    currentTrackIndex = trackIndexToLoad;
-    const track = playlist[currentTrackIndex];
-    if (!track) {
-        console.error("Track not found at index:", currentTrackIndex);
+const actualLoadAndPlayTrack = (trackToLoad) => {
+    const actualIndexInFullPlaylist = playlist.findIndex(track => track.id === trackToLoad.id);
+
+    if (actualIndexInFullPlaylist === -1) {
+        console.error("Track to load not found in the original playlist.");
         return;
     }
 
-    setTrack(track);
-    updateNowPlaying(track);
-    highlightCurrentTrack(currentTrackIndex); // Initial highlight
+    currentTrackIndex = actualIndexInFullPlaylist; 
 
+    setTrack(trackToLoad);
+    updateNowPlaying(trackToLoad);
+   
     playAudio().then(() => {
         isPlayingState = true;
         if (playBtn) playBtn.innerHTML = '<i class="fa fa-pause"></i>';
         if (disk) disk.classList.remove("rotate");
-        highlightCurrentTrack(currentTrackIndex); // Re-highlight to update icon in playlist
+
     }).catch(err => {
         console.error("Playback error:", err);
         isPlayingState = false; // Ensure state is correct on error
         if (playBtn) playBtn.innerHTML = '<i class="fa fa-play"></i>';
         if (disk) disk.classList.add("rotate");
-        highlightCurrentTrack(currentTrackIndex); // Re-highlight to update icon in playlist
+       
     });
 };
 
-const handlePlaylistItemClick = (index) => {
-    if (index === currentTrackIndex && isPlayingState) {
+const handlePlaylistItemClick = (index, currentRenderedPlaylist) => {
+    const clickedTrack = currentRenderedPlaylist[index];
+
+    // Find the actual index of the clicked track in the original playlist to update currentTrackIndex
+    const actualIndexInFullPlaylist = playlist.findIndex(track => track.id === clickedTrack.id);
+     if (actualIndexInFullPlaylist === -1) {
+        console.error("Clicked track not found in the original playlist.");
+        return;
+    }
+
+
+    if (actualIndexInFullPlaylist === currentTrackIndex && isPlayingState) {
         pauseAudio();
         isPlayingState = false;
         if (playBtn) playBtn.innerHTML = '<i class="fa fa-play"></i>';
         if (disk) disk.classList.add("rotate");
     } else {
-        actualLoadAndPlayTrack(index);
+        actualLoadAndPlayTrack(clickedTrack); 
     }
-    highlightCurrentTrack(index); // Ensure correct item is highlighted with correct icon
+    
+    highlightCurrentTrack(index);
 };
 
 const handlePlayPause = () => {
@@ -70,9 +82,7 @@ const handlePlayPause = () => {
         if (playBtn) playBtn.innerHTML = '<i class="fa fa-play"></i>';
         if (disk) disk.classList.add("rotate");
     } else {
-        // If no track is technically "loaded" in the audio element but one is selected,
-        // actualLoadAndPlayTrack should be called. Otherwise, just play.
-        // For simplicity, we assume a track is always cued up if playlist is not empty.
+       
         playAudio().then(() => {
             isPlayingState = true;
             if (playBtn) playBtn.innerHTML = '<i class="fa fa-pause"></i>';
@@ -88,13 +98,46 @@ const handlePlayPause = () => {
 };
 
 const handleNextTrack = () => {
-    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-    actualLoadAndPlayTrack(currentTrackIndex);
+    if (currentRenderedPlaylist.length === 0) return; // Prevent errors if playlist is empty
+
+    // Find the index of the currently playing track within the currently rendered playlist
+    const currentTrackInRenderedIndex = currentRenderedPlaylist.findIndex(track => track.id === playlist[currentTrackIndex].id);
+
+    if (currentTrackInRenderedIndex === -1) {
+        console.error("Current track not found in the rendered playlist.");
+
+        actualLoadAndPlayTrack(currentRenderedPlaylist[0]);
+        highlightCurrentTrack(0);
+        return;
+    }
+
+
+    const nextTrackInRenderedIndex = (currentTrackInRenderedIndex + 1) % currentRenderedPlaylist.length;
+    const nextTrack = currentRenderedPlaylist[nextTrackInRenderedIndex];
+
+    actualLoadAndPlayTrack(nextTrack);
+    highlightCurrentTrack(nextTrackInRenderedIndex);
 };
 
 const handlePrevTrack = () => {
-    currentTrackIndex = (currentTrackIndex - 1 + playlist.length + playlist.length) % playlist.length; // Ensure positive index
-    actualLoadAndPlayTrack(currentTrackIndex);
+     if (currentRenderedPlaylist.length === 0) return; // Prevent errors if playlist is empty
+
+    // Find the index of the currently playing track within the currently rendered playlist
+    const currentTrackInRenderedIndex = currentRenderedPlaylist.findIndex(track => track.id === playlist[currentTrackIndex].id);
+
+     if (currentTrackInRenderedIndex === -1) {
+        console.error("Current track not found in the rendered playlist.");
+         // Fallback: if current track not in rendered list, just go to the last track of the rendered list
+        actualLoadAndPlayTrack(currentRenderedPlaylist[currentRenderedPlaylist.length - 1]);
+        highlightCurrentTrack(currentRenderedPlaylist.length - 1);
+        return;
+    }
+
+    const prevTrackInRenderedIndex = (currentTrackInRenderedIndex - 1 + currentRenderedPlaylist.length) % currentRenderedPlaylist.length; // Ensure positive index
+    const prevTrack = currentRenderedPlaylist[prevTrackInRenderedIndex];
+
+    actualLoadAndPlayTrack(prevTrack);
+    highlightCurrentTrack(prevTrackInRenderedIndex);
 };
 
 const handleVolumeChange = (event) => { // event.target.value
@@ -106,15 +149,15 @@ const handleVolumeChange = (event) => { // event.target.value
 };
 
 const handleMuteToggle = () => {
-    const currentlyMuted = getAudio().muted; // Check actual audio muted state
-    toggleMute(); // This will flip the state in player.js
-    isMuted = getAudio().muted; // Get new state
+    const currentlyMuted = getAudio().muted;
+    toggleMute(); //flip the state in player.js
+    isMuted = getAudio().muted; // getting new state
 
-    if (!isMuted && getVolume() === 0) { // If unmuted and volume was 0
+    if (!isMuted && getVolume() === 0) { 
         currentVolume = 0.5; // Set to a default volume
         setVolume(currentVolume);
     } else {
-        currentVolume = getVolume(); // Reflect current volume
+        currentVolume = getVolume(); // show current volume
     }
     updateVolumeUI(currentVolume, isMuted);
 };
@@ -130,7 +173,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick);
+    currentRenderedPlaylist = renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick); // Assign returned value
+    renderArtistSlides(playlist); // Call to render initial artist slides
+
+    
 
     if (playBtn) playBtn.addEventListener("click", handlePlayPause);
     if (nextBtn) nextBtn.addEventListener("click", handleNextTrack);
@@ -139,11 +185,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (volumeBtn) volumeBtn.addEventListener("click", handleMuteToggle);
     if (volumeSlider) volumeSlider.addEventListener("input", handleVolumeChange);
 
+    
     // Initial track setup (load first track but don't autoplay)
     const initialTrack = playlist[currentTrackIndex];
     if (initialTrack) {
-        setTrack(initialTrack);
-        updateNowPlaying(initialTrack);
+        actualLoadAndPlayTrack(initialTrack);
+        // Highlight the initial track in the rendered playlist (which is the full playlist initially)
         highlightCurrentTrack(currentTrackIndex);
     }
 
@@ -162,25 +209,128 @@ document.addEventListener("DOMContentLoaded", () => {
         playlistInfoElement.textContent = `${playlist.length} items on the playlist`;
     }
 
-    // The original main.js called loadAndPlayTrack() here.
-    // If you want the first track to play automatically on load, uncomment the next line:
-    // actualLoadAndPlayTrack(currentTrackIndex);
-    // Otherwise, the first track is loaded, and the user needs to click play.
 });
 
-// This block allows Jest (a Node.js environment) to import these functions using require()
-// Export functions you intend to unit test from main.js
+// Function to render artist slides
+const renderArtistSlides = (currentPlaylist) => {
+    const slidesContainer = document.querySelector(".slides");
+    if (!slidesContainer) {
+        console.error("Slides container not found.");
+        return;
+    }
+
+    slidesContainer.innerHTML = ''; // Clear existing slides
+
+    // Get unique artists
+    const artists = [...new Set(currentPlaylist.map(track => track.artist))];
+
+    artists.forEach(artist => {
+        // Find the first song by this artist to get a cover image
+        const firstSongByArtist = currentPlaylist.find(track => track.artist === artist);
+        const coverImage = firstSongByArtist ? firstSongByArtist.cover : './assets/images/default-cover.jpg'; // Use a default if no cover found
+
+        const slideElement = document.createElement('div');
+        slideElement.classList.add('slide');
+
+        // Add a class based on the artist name for filtering (clean up artist name for class)
+        const artistClass = artist.replace(/[^a-zA-Z0-9]/g, '-');
+        slideElement.classList.add(artistClass);
+
+        slideElement.innerHTML = `
+            <div class="pic"><img src="${coverImage}" alt="${artist} cover"></div>
+            <b>${artist}</b>
+        `;
+
+        // filter playlist by artist
+        slideElement.addEventListener('click', () => {
+            const filteredPlaylist = playlist.filter(track => track.artist === artist);
+            currentRenderedPlaylist = renderPlaylist(filteredPlaylist, 0, handlePlaylistItemClick); // Assign returned value
+            //  update the playlist count text
+            const playlistInfoElement = document.querySelector('.playlist p');
+            if (playlistInfoElement) {
+                playlistInfoElement.textContent = `${filteredPlaylist.length} items by ${artist}`;
+            }
+        });
+
+        slidesContainer.appendChild(slideElement);
+    });
+};
+
+
+const modal = document.getElementById("modal");
+const openBtn = document.getElementById("openModalBtn");
+const closeBtn = document.getElementById("closeModalBtn");
+
+console.log("Open modal button element:", openBtn); // issue with modal
+
+if (openBtn && modal && closeBtn) { // Add checks to ensure elements exist
+    openBtn.addEventListener('click', () => {
+        console.log("Open modal button clicked"); // This line should already be there
+        modal.style.display = "block";
+    });
+
+    closeBtn.addEventListener('click', () => modal.style.display = "none");
+
+    window.onclick = (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+} else {
+    console.error("Modal elements not found. Check IDs in index.html and modal.html");
+}
+
+    //aading a new song
+    const addSongForm = document.querySelector(".modal-form");
+    if (addSongForm) {
+        addSongForm.addEventListener('submit', (event) => {
+            event.preventDefault(); 
+
+            const songTitleInput = document.getElementById("songTitle");
+            const songArtistInput = document.getElementById("songArtist");
+            const songSrcInput = document.getElementById("songSrc");
+            const songCoverInput = document.getElementById("songCover");
+
+            if (songTitleInput && songArtistInput && songSrcInput && songCoverInput) {
+                const newSong = {
+                    title: songTitleInput.value,
+                    artist: songArtistInput.value,
+                    src: songSrcInput.files.length > 0 ? URL.createObjectURL(songSrcInput.files[0]) : '', // Use createObjectURL for audio file
+                    cover: songCoverInput.files.length > 0 ? URL.createObjectURL(songCoverInput.files[0]) : '', // Use createObjectURL for cover image
+                    duration: "00:01"
+                };
+
+                playlist.push(newSong); // Add new song to the playlist array
+                currentRenderedPlaylist = renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick); // Re-render the main playlist and assign
+                renderArtistSlides(playlist); // Re-render artist slides
+
+                // Close the modal and clear the form
+                if (modal) modal.style.display = "none";
+                songTitleInput.value = '';
+                songArtistInput.value = '';
+               
+                // update the playlist count text
+                const playlistInfoElement = document.querySelector('.playlist p');
+                if (playlistInfoElement) {
+                    playlistInfoElement.textContent = `${playlist.length} items on the playlist`;
+                }
+
+            } else {
+                console.error("One or more song input elements not found.");
+            }
+        });
+    } else {
+        console.error("Add song form element not found.");
+    }
+
+
+// Export export for unit test
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
-    // Re-exporting imported functions for testing might be redundant if they are tested in their own files.
-    // Focus on exporting functions defined *within* main.js if they contain logic worth testing in isolation.
-    // For example, if actualLoadAndPlayTrack had more complex logic beyond orchestration.
-    // The handlers are good candidates if their logic is complex.
-    // For now, keeping it similar to your original structure:
-    loadAndPlayTrack: actualLoadAndPlayTrack, // Renamed to avoid conflict, but export as original name
+    
+    loadAndPlayTrack: actualLoadAndPlayTrack, 
     handlePlaylistItemClick,
-    handleVolumeChange, // Note: original took value, now it takes event. Test should adapt.
+    handleVolumeChange, 
     handleMuteToggle,
-    // Add other functions from main.js you want to test directly
   };
 }
