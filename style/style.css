@@ -21,8 +21,8 @@ body{
  }
 
  /* Modal Content */
- .modal-content {
-   background-color: #fff;
+ .modal-content {    
+   background-color: white;
    margin: 10% auto;
    padding: 20px;
    border-radius: 10px;
@@ -39,22 +39,32 @@ body{
    cursor: pointer;
  }
 
- .modal-form input[type="text"],
- .modal-form input[type="email"] {
+ .modal-form input{
    width: 100%;
    padding: 8px;
    margin: 8px 0;
    box-sizing: border-box;
+   background-color: transparent;
+   border: 1px solid gray;
+   border-radius: 3px;
+
+ }
+ .modal-form input[type="file"]{
+   width: 70%;
  }
 
- .modal-form button[type="submit"] {
-   background-color: #007BFF;
+ .modal-form button{
+   background-color: #0056b3;
    color: white;
    border: none;
-   padding: 10px;
-   width: 100%;
+   padding: 7px;
+   width: 90px;
    cursor: pointer;
-   border-radius: 5px;
+   border-radius: 3px;
+ }
+ .modal-form button:hover{
+   padding:8px;
+   box-shadow: 0px 5px 9px gray;
  }
 
  .modal-form button[type="submit"]:hover {
