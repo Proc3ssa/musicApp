@@ -453,6 +453,9 @@ button.play:hover{
    background: #4caf50;
    cursor: pointer;
  }
+ @media(max-width: 767px) {
+   .disNone{display: none;}
+ }
 
  @media(max-width: 1024px) {
 
@@ -485,7 +488,7 @@ button.play:hover{
 
  }
  .ar{
-   margin-left: 10px;
+   margin-left: 20px;
  }
  .duration{
    text-align: right;
