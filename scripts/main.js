@@ -324,7 +324,8 @@ if (openBtn && modal && closeBtn) { // Add checks to ensure elements exist
                     title: songTitleInput.value,
                     artist: songArtistInput.value,
                     src: songSrcInput.files.length > 0 ? URL.createObjectURL(songSrcInput.files[0]) : '', // Use createObjectURL for audio file
-                    cover: songCoverInput.files.length > 0 ? URL.createObjectURL(songCoverInput.files[0]) : '' // Use createObjectURL for cover image
+                    cover: songCoverInput.files.length > 0 ? URL.createObjectURL(songCoverInput.files[0]) : '', // Use createObjectURL for cover image
+                    duration: "00:01"
                 };
 
                 playlist.push(newSong); // Add new song to the playlist array
