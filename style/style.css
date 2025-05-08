@@ -346,6 +346,7 @@ button.play:hover{
    justify-content: space-between;
    align-items: center;
    width: 35%;
+   margin-left: 10px;
 }
 
 .artist{
@@ -482,6 +483,9 @@ button.play:hover{
  .ar, .duration{
    width: 40%;
 
+ }
+ .ar{
+   margin-left: 10px;
  }
  .duration{
    text-align: right;
