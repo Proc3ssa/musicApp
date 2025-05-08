@@ -210,6 +210,52 @@ if (openBtn && modal && closeBtn) { // Add checks to ensure elements exist
     console.error("Modal elements not found. Check IDs in index.html and modal.html");
 }
 
+    // Handle form submission for adding a new song
+    const addSongForm = document.querySelector(".modal-form");
+    if (addSongForm) {
+        addSongForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent default form submission
+
+            const songTitleInput = document.getElementById("songTitle");
+            const songArtistInput = document.getElementById("songArtist");
+            const songSrcInput = document.getElementById("songSrc");
+            const songCoverInput = document.getElementById("songCover");
+
+            if (songTitleInput && songArtistInput && songSrcInput && songCoverInput) {
+                const newSong = {
+                    title: songTitleInput.value,
+                    artist: songArtistInput.value,
+                    src: songSrcInput.files.length > 0 ? URL.createObjectURL(songSrcInput.files[0]) : '', // Use createObjectURL for audio file
+                    cover: songCoverInput.files.length > 0 ? URL.createObjectURL(songCoverInput.files[0]) : '' // Use createObjectURL for cover image
+                };
+
+                playlist.push(newSong); // Add new song to the playlist array
+                renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick); // Re-render the playlist
+
+                // Close the modal and clear the form
+                if (modal) modal.style.display = "none";
+                // Clear the form fields (file inputs cannot be cleared by setting value)
+                songTitleInput.value = '';
+                songArtistInput.value = '';
+                // To clear file inputs, you typically need to reset the form or replace the input element.
+                // For simplicity here, we'll just leave them as is after submission.
+                // songSrcInput.value = ''; // This won't work for file inputs
+                // songCoverInput.value = ''; // This won't work for file inputs
+
+                // Optionally update the playlist count text
+                const playlistInfoElement = document.querySelector('.playlist p');
+                if (playlistInfoElement) {
+                    playlistInfoElement.textContent = `${playlist.length} items on the playlist`;
+                }
+
+            } else {
+                console.error("One or more song input elements not found.");
+            }
+        });
+    } else {
+        console.error("Add song form element not found.");
+    }
+
 
 // This block allows Jest (a Node.js environment) to import these functions using require()
 // Export functions you intend to unit test from main.js
