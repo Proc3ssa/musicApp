@@ -17,6 +17,17 @@
 
 
 <section>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+          <span class="close" id="closeModalBtn">&times;</span>
+          <form class="modal-form">
+            <h3>Contact Form</h3>
+            <input type="text" placeholder="Your Name" required />
+            <input type="email" placeholder="Your Email" required />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
     <!-- <h1 align="center">FaisalPlay</h1> -->
     <header>
         <div class="search ">
@@ -26,7 +37,7 @@
 
         <div class="settings">
             
-           <button class="new-playlist"><i class="fa fa-plus"></i> new playlist
+           <button id="openModalBtn"><i class="fa fa-plus"></i> new playlist
             </button>
             
         </div>
@@ -149,6 +160,7 @@
 </main>
 
 <script type="module" src="./scripts/main.js"></script>
+
 
 </body>
 </html>

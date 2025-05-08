@@ -187,6 +187,30 @@ document.addEventListener("DOMContentLoaded", () => {
     // Otherwise, the first track is loaded, and the user needs to click play.
 });
 
+const modal = document.getElementById("modal");
+const openBtn = document.getElementById("openModalBtn");
+const closeBtn = document.getElementById("closeModalBtn");
+
+console.log("Open modal button element:", openBtn); // Add this line
+
+if (openBtn && modal && closeBtn) { // Add checks to ensure elements exist
+    openBtn.addEventListener('click', () => {
+        console.log("Open modal button clicked"); // This line should already be there
+        modal.style.display = "block";
+    });
+
+    closeBtn.addEventListener('click', () => modal.style.display = "none");
+
+    window.onclick = (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+} else {
+    console.error("Modal elements not found. Check IDs in index.html and modal.html");
+}
+
+
 // This block allows Jest (a Node.js environment) to import these functions using require()
 // Export functions you intend to unit test from main.js
 if (typeof module !== 'undefined' && module.exports) {
