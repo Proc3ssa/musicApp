@@ -11,10 +11,9 @@ let currentTrackIndex = 0;
 let isPlayingState = false;
 let isMuted = false;
 let currentVolume = 1.0;
-let currentRenderedPlaylist = []; // Declare variable to hold the currently rendered playlist
+let currentRenderedPlaylist = []; 
 
-// It's good practice to declare these here and assign in DOMContentLoaded
-// To avoid errors if script runs before DOM is ready
+
 let playBtn, prevBtn, nextBtn, disk, volumeBtn, volumeSlider;
 
 const initializeDOMElements = () => {
@@ -34,26 +33,22 @@ const actualLoadAndPlayTrack = (trackToLoad) => {
         return;
     }
 
-    currentTrackIndex = actualIndexInFullPlaylist; // Update the global index
+    currentTrackIndex = actualIndexInFullPlaylist; 
 
     setTrack(trackToLoad);
     updateNowPlaying(trackToLoad);
-    // Highlight the track in the currently rendered playlist - this will be handled by the caller of actualLoadAndPlayTrack
-    // highlightCurrentTrack(currentTrackIndex); // Removed as highlighting is context-dependent
-
+   
     playAudio().then(() => {
         isPlayingState = true;
         if (playBtn) playBtn.innerHTML = '<i class="fa fa-pause"></i>';
         if (disk) disk.classList.remove("rotate");
-        // Re-highlight to update icon in playlist - this will be handled by the caller
-        // highlightCurrentTrack(currentTrackIndex);
+
     }).catch(err => {
         console.error("Playback error:", err);
         isPlayingState = false; // Ensure state is correct on error
         if (playBtn) playBtn.innerHTML = '<i class="fa fa-play"></i>';
         if (disk) disk.classList.add("rotate");
-        // Re-highlight to update icon in playlist - this will be handled by the caller
-        // highlightCurrentTrack(currentTrackIndex);
+       
     });
 };
 
@@ -74,9 +69,9 @@ const handlePlaylistItemClick = (index, currentRenderedPlaylist) => {
         if (playBtn) playBtn.innerHTML = '<i class="fa fa-play"></i>';
         if (disk) disk.classList.add("rotate");
     } else {
-        actualLoadAndPlayTrack(clickedTrack); // Pass the track object
+        actualLoadAndPlayTrack(clickedTrack); 
     }
-    // Highlight the track in the currently rendered playlist
+    
     highlightCurrentTrack(index);
 };
 
@@ -87,9 +82,7 @@ const handlePlayPause = () => {
         if (playBtn) playBtn.innerHTML = '<i class="fa fa-play"></i>';
         if (disk) disk.classList.add("rotate");
     } else {
-        // If no track is technically "loaded" in the audio element but one is selected,
-        // actualLoadAndPlayTrack should be called. Otherwise, just play.
-        // For simplicity, we assume a track is always cued up if playlist is not empty.
+       
         playAudio().then(() => {
             isPlayingState = true;
             if (playBtn) playBtn.innerHTML = '<i class="fa fa-pause"></i>';
@@ -112,7 +105,7 @@ const handleNextTrack = () => {
 
     if (currentTrackInRenderedIndex === -1) {
         console.error("Current track not found in the rendered playlist.");
-        // Fallback: if current track not in rendered list, just go to the first track of the rendered list
+
         actualLoadAndPlayTrack(currentRenderedPlaylist[0]);
         highlightCurrentTrack(0);
         return;
@@ -156,15 +149,15 @@ const handleVolumeChange = (event) => { // event.target.value
 };
 
 const handleMuteToggle = () => {
-    const currentlyMuted = getAudio().muted; // Check actual audio muted state
-    toggleMute(); // This will flip the state in player.js
-    isMuted = getAudio().muted; // Get new state
+    const currentlyMuted = getAudio().muted;
+    toggleMute(); //flip the state in player.js
+    isMuted = getAudio().muted; // getting new state
 
-    if (!isMuted && getVolume() === 0) { // If unmuted and volume was 0
+    if (!isMuted && getVolume() === 0) { 
         currentVolume = 0.5; // Set to a default volume
         setVolume(currentVolume);
     } else {
-        currentVolume = getVolume(); // Reflect current volume
+        currentVolume = getVolume(); // show current volume
     }
     updateVolumeUI(currentVolume, isMuted);
 };
@@ -183,25 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentRenderedPlaylist = renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick); // Assign returned value
     renderArtistSlides(playlist); // Call to render initial artist slides
 
-    // The previous code for adding event listeners to slide divs is no longer needed
-    // because renderArtistSlides now adds these listeners dynamically.
-    // const slideElements = document.querySelectorAll('.slide');
-    // slideElements.forEach(slide => {
-    //     slide.addEventListener('click', () => {
-    //         // Extract artist name from class list (excluding 'slide')
-    //         const artistClass = Array.from(slide.classList).find(className => className !== 'slide');
-    //         if (artistClass) {
-    //             // Filter the playlist by artist
-    //             const filteredPlaylist = playlist.filter(track => track.artist === artistClass);
-    //             renderPlaylist(filteredPlaylist, 0, handlePlaylistItemClick); // Render filtered playlist, start at index 0
-    //             // Optionally, update the playlist count text
-    //             const playlistInfoElement = document.querySelector('.playlist p');
-    //             if (playlistInfoElement) {
-    //                 playlistInfoElement.textContent = `${filteredPlaylist.length} items by ${artistClass}`;
-    //             }
-    //         }
-    //     });
-    // });
+    
 
     if (playBtn) playBtn.addEventListener("click", handlePlayPause);
     if (nextBtn) nextBtn.addEventListener("click", handleNextTrack);
@@ -210,11 +185,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (volumeBtn) volumeBtn.addEventListener("click", handleMuteToggle);
     if (volumeSlider) volumeSlider.addEventListener("input", handleVolumeChange);
 
-    // Initial track setup (load first track but don't autoplay)
+    
     // Initial track setup (load first track but don't autoplay)
     const initialTrack = playlist[currentTrackIndex];
     if (initialTrack) {
-        actualLoadAndPlayTrack(initialTrack); // Use the updated function
+        actualLoadAndPlayTrack(initialTrack);
         // Highlight the initial track in the rendered playlist (which is the full playlist initially)
         highlightCurrentTrack(currentTrackIndex);
     }
@@ -234,10 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
         playlistInfoElement.textContent = `${playlist.length} items on the playlist`;
     }
 
-    // The original main.js called loadAndPlayTrack() here.
-    // If you want the first track to play automatically on load, uncomment the next line:
-    // actualLoadAndPlayTrack(currentTrackIndex);
-    // Otherwise, the first track is loaded, and the user needs to click play.
 });
 
 // Function to render artist slides
@@ -260,6 +231,7 @@ const renderArtistSlides = (currentPlaylist) => {
 
         const slideElement = document.createElement('div');
         slideElement.classList.add('slide');
+
         // Add a class based on the artist name for filtering (clean up artist name for class)
         const artistClass = artist.replace(/[^a-zA-Z0-9]/g, '-');
         slideElement.classList.add(artistClass);
@@ -269,11 +241,11 @@ const renderArtistSlides = (currentPlaylist) => {
             <b>${artist}</b>
         `;
 
-        // Add click event listener to filter playlist by artist
+        // filter playlist by artist
         slideElement.addEventListener('click', () => {
             const filteredPlaylist = playlist.filter(track => track.artist === artist);
             currentRenderedPlaylist = renderPlaylist(filteredPlaylist, 0, handlePlaylistItemClick); // Assign returned value
-            // Optionally, update the playlist count text
+            //  update the playlist count text
             const playlistInfoElement = document.querySelector('.playlist p');
             if (playlistInfoElement) {
                 playlistInfoElement.textContent = `${filteredPlaylist.length} items by ${artist}`;
@@ -289,7 +261,7 @@ const modal = document.getElementById("modal");
 const openBtn = document.getElementById("openModalBtn");
 const closeBtn = document.getElementById("closeModalBtn");
 
-console.log("Open modal button element:", openBtn); // Add this line
+console.log("Open modal button element:", openBtn); // issue with modal
 
 if (openBtn && modal && closeBtn) { // Add checks to ensure elements exist
     openBtn.addEventListener('click', () => {
@@ -308,11 +280,11 @@ if (openBtn && modal && closeBtn) { // Add checks to ensure elements exist
     console.error("Modal elements not found. Check IDs in index.html and modal.html");
 }
 
-    // Handle form submission for adding a new song
+    //aading a new song
     const addSongForm = document.querySelector(".modal-form");
     if (addSongForm) {
         addSongForm.addEventListener('submit', (event) => {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault(); 
 
             const songTitleInput = document.getElementById("songTitle");
             const songArtistInput = document.getElementById("songArtist");
@@ -334,15 +306,10 @@ if (openBtn && modal && closeBtn) { // Add checks to ensure elements exist
 
                 // Close the modal and clear the form
                 if (modal) modal.style.display = "none";
-                // Clear the form fields (file inputs cannot be cleared by setting value)
                 songTitleInput.value = '';
                 songArtistInput.value = '';
-                // To clear file inputs, you typically need to reset the form or replace the input element.
-                // For simplicity here, we'll just leave them as is after submission.
-                // songSrcInput.value = ''; // This won't work for file inputs
-                // songCoverInput.value = ''; // This won't work for file inputs
-
-                // Optionally update the playlist count text
+               
+                // update the playlist count text
                 const playlistInfoElement = document.querySelector('.playlist p');
                 if (playlistInfoElement) {
                     playlistInfoElement.textContent = `${playlist.length} items on the playlist`;
@@ -357,19 +324,13 @@ if (openBtn && modal && closeBtn) { // Add checks to ensure elements exist
     }
 
 
-// This block allows Jest (a Node.js environment) to import these functions using require()
-// Export functions you intend to unit test from main.js
+// Export export for unit test
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
-    // Re-exporting imported functions for testing might be redundant if they are tested in their own files.
-    // Focus on exporting functions defined *within* main.js if they contain logic worth testing in isolation.
-    // For example, if actualLoadAndPlayTrack had more complex logic beyond orchestration.
-    // The handlers are good candidates if their logic is complex.
-    // For now, keeping it similar to your original structure:
-    loadAndPlayTrack: actualLoadAndPlayTrack, // Renamed to avoid conflict, but export as original name
+    
+    loadAndPlayTrack: actualLoadAndPlayTrack, 
     handlePlaylistItemClick,
-    handleVolumeChange, // Note: original took value, now it takes event. Test should adapt.
+    handleVolumeChange, 
     handleMuteToggle,
-    // Add other functions from main.js you want to test directly
   };
 }

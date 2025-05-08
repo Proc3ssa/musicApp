@@ -10,7 +10,6 @@ body{
     color: var(--text-color);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
- /* Modal Background */
  .modal {
    display: none; 
    position: fixed;
@@ -20,7 +19,6 @@ body{
    background-color: rgba(0, 0, 0, 0.5);
  }
 
- /* Modal Content */
  .modal-content {    
    background-color: white;
    margin: 10% auto;
@@ -305,10 +303,6 @@ button.play:hover{
    width: 41px;
 }
 
-.fa-forward:hover, .fa-backward:hover{
-
-}
-
 .song{
    background-color: var(--acsent-color);
    border-radius: 5px;
@@ -369,9 +363,7 @@ button.play:hover{
    
 }
 
-/* Add these styles to your style.css file */
 
-/* Playlist song styling */
 .playlist .song {
    cursor: pointer;
    transition: all 0.3s ease;
@@ -384,7 +376,7 @@ button.play:hover{
    background-color: rgba(255, 255, 255, 0.658);
  }
  
- /* Active song styling */
+ 
  .playlist .song.active {
    background-color: rgba(196, 210, 248, 0.836);
    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
@@ -397,7 +389,7 @@ button.play:hover{
    font-weight: bold;
  }
  
- /* Animation for the disc */
+ 
  @keyframes rotate {
    from {
      transform: rotate(0deg);
@@ -517,9 +509,6 @@ input[type="search"]{
    
    
 }
-
-
-
 
  }
  
