@@ -131,25 +131,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick);
+    renderArtistSlides(playlist); // Call to render initial artist slides
 
-    // Add event listeners to slide divs
-    const slideElements = document.querySelectorAll('.slide');
-    slideElements.forEach(slide => {
-        slide.addEventListener('click', () => {
-            // Extract artist name from class list (excluding 'slide')
-            const artistClass = Array.from(slide.classList).find(className => className !== 'slide');
-            if (artistClass) {
-                // Filter the playlist by artist
-                const filteredPlaylist = playlist.filter(track => track.artist === artistClass);
-                renderPlaylist(filteredPlaylist, 0, handlePlaylistItemClick); // Render filtered playlist, start at index 0
-                // Optionally, update the playlist count text
-                const playlistInfoElement = document.querySelector('.playlist p');
-                if (playlistInfoElement) {
-                    playlistInfoElement.textContent = `${filteredPlaylist.length} items by ${artistClass}`;
-                }
-            }
-        });
-    });
+    // The previous code for adding event listeners to slide divs is no longer needed
+    // because renderArtistSlides now adds these listeners dynamically.
+    // const slideElements = document.querySelectorAll('.slide');
+    // slideElements.forEach(slide => {
+    //     slide.addEventListener('click', () => {
+    //         // Extract artist name from class list (excluding 'slide')
+    //         const artistClass = Array.from(slide.classList).find(className => className !== 'slide');
+    //         if (artistClass) {
+    //             // Filter the playlist by artist
+    //             const filteredPlaylist = playlist.filter(track => track.artist === artistClass);
+    //             renderPlaylist(filteredPlaylist, 0, handlePlaylistItemClick); // Render filtered playlist, start at index 0
+    //             // Optionally, update the playlist count text
+    //             const playlistInfoElement = document.querySelector('.playlist p');
+    //             if (playlistInfoElement) {
+    //                 playlistInfoElement.textContent = `${filteredPlaylist.length} items by ${artistClass}`;
+    //             }
+    //         }
+    //     });
+    // });
 
     if (playBtn) playBtn.addEventListener("click", handlePlayPause);
     if (nextBtn) nextBtn.addEventListener("click", handleNextTrack);
@@ -186,6 +188,51 @@ document.addEventListener("DOMContentLoaded", () => {
     // actualLoadAndPlayTrack(currentTrackIndex);
     // Otherwise, the first track is loaded, and the user needs to click play.
 });
+
+// Function to render artist slides
+const renderArtistSlides = (currentPlaylist) => {
+    const slidesContainer = document.querySelector(".slides");
+    if (!slidesContainer) {
+        console.error("Slides container not found.");
+        return;
+    }
+
+    slidesContainer.innerHTML = ''; // Clear existing slides
+
+    // Get unique artists
+    const artists = [...new Set(currentPlaylist.map(track => track.artist))];
+
+    artists.forEach(artist => {
+        // Find the first song by this artist to get a cover image
+        const firstSongByArtist = currentPlaylist.find(track => track.artist === artist);
+        const coverImage = firstSongByArtist ? firstSongByArtist.cover : './assets/images/default-cover.jpg'; // Use a default if no cover found
+
+        const slideElement = document.createElement('div');
+        slideElement.classList.add('slide');
+        // Add a class based on the artist name for filtering (clean up artist name for class)
+        const artistClass = artist.replace(/[^a-zA-Z0-9]/g, '-');
+        slideElement.classList.add(artistClass);
+
+        slideElement.innerHTML = `
+            <div class="pic"><img src="${coverImage}" alt="${artist} cover"></div>
+            <b>${artist}</b>
+        `;
+
+        // Add click event listener to filter playlist by artist
+        slideElement.addEventListener('click', () => {
+            const filteredPlaylist = playlist.filter(track => track.artist === artist);
+            renderPlaylist(filteredPlaylist, 0, handlePlaylistItemClick); // Render filtered playlist, start at index 0
+            // Optionally, update the playlist count text
+            const playlistInfoElement = document.querySelector('.playlist p');
+            if (playlistInfoElement) {
+                playlistInfoElement.textContent = `${filteredPlaylist.length} items by ${artist}`;
+            }
+        });
+
+        slidesContainer.appendChild(slideElement);
+    });
+};
+
 
 const modal = document.getElementById("modal");
 const openBtn = document.getElementById("openModalBtn");
@@ -230,7 +277,8 @@ if (openBtn && modal && closeBtn) { // Add checks to ensure elements exist
                 };
 
                 playlist.push(newSong); // Add new song to the playlist array
-                renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick); // Re-render the playlist
+                renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick); // Re-render the main playlist
+                renderArtistSlides(playlist); // Re-render artist slides
 
                 // Close the modal and clear the form
                 if (modal) modal.style.display = "none";
