@@ -82,7 +82,7 @@ export const renderPlaylist = (playlistData, currentTrackIndex, onSongClick) => 
       </div>
     `;
 
-    songElement.addEventListener('click', () => onSongClick(index));
+    songElement.addEventListener('click', () => onSongClick(index, playlistData)); // Pass playlistData to the click handler
     playlistContainer.appendChild(songElement);
   });
   
@@ -92,6 +92,7 @@ export const renderPlaylist = (playlistData, currentTrackIndex, onSongClick) => 
   // Assuming you meant to update a general playlist info text:
   // This logic was previously in main.js and is better placed there
   // or passed in if ui.js needs to update it.
+  return playlistData; // Return the playlist data that was rendered
 };
 
 export const highlightCurrentTrack = (index) => {
@@ -119,9 +120,9 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     updateNowPlaying,
     updateProgress,
-    updateVolumeUI,
     renderPlaylist,
     highlightCurrentTrack,
-    formatTime // Also export formatTime for testing as it was in your original conditional export
+    formatTime, // Also export formatTime for testing as it was in your original conditional export
+    updateVolumeUI // Export updateVolumeUI
   };
 }

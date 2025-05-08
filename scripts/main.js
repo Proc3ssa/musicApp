@@ -11,6 +11,7 @@ let currentTrackIndex = 0;
 let isPlayingState = false;
 let isMuted = false;
 let currentVolume = 1.0;
+let currentRenderedPlaylist = []; // Declare variable to hold the currently rendered playlist
 
 // It's good practice to declare these here and assign in DOMContentLoaded
 // To avoid errors if script runs before DOM is ready
@@ -25,42 +26,58 @@ const initializeDOMElements = () => {
     volumeSlider = document.querySelector(".volume-slider");
 };
 
-const actualLoadAndPlayTrack = (trackIndexToLoad) => {
-    currentTrackIndex = trackIndexToLoad;
-    const track = playlist[currentTrackIndex];
-    if (!track) {
-        console.error("Track not found at index:", currentTrackIndex);
+const actualLoadAndPlayTrack = (trackToLoad) => {
+    const actualIndexInFullPlaylist = playlist.findIndex(track => track.id === trackToLoad.id);
+
+    if (actualIndexInFullPlaylist === -1) {
+        console.error("Track to load not found in the original playlist.");
         return;
     }
 
-    setTrack(track);
-    updateNowPlaying(track);
-    highlightCurrentTrack(currentTrackIndex); // Initial highlight
+    currentTrackIndex = actualIndexInFullPlaylist; // Update the global index
+
+    setTrack(trackToLoad);
+    updateNowPlaying(trackToLoad);
+    // Highlight the track in the currently rendered playlist - this will be handled by the caller of actualLoadAndPlayTrack
+    // highlightCurrentTrack(currentTrackIndex); // Removed as highlighting is context-dependent
 
     playAudio().then(() => {
         isPlayingState = true;
         if (playBtn) playBtn.innerHTML = '<i class="fa fa-pause"></i>';
         if (disk) disk.classList.remove("rotate");
-        highlightCurrentTrack(currentTrackIndex); // Re-highlight to update icon in playlist
+        // Re-highlight to update icon in playlist - this will be handled by the caller
+        // highlightCurrentTrack(currentTrackIndex);
     }).catch(err => {
         console.error("Playback error:", err);
         isPlayingState = false; // Ensure state is correct on error
         if (playBtn) playBtn.innerHTML = '<i class="fa fa-play"></i>';
         if (disk) disk.classList.add("rotate");
-        highlightCurrentTrack(currentTrackIndex); // Re-highlight to update icon in playlist
+        // Re-highlight to update icon in playlist - this will be handled by the caller
+        // highlightCurrentTrack(currentTrackIndex);
     });
 };
 
-const handlePlaylistItemClick = (index) => {
-    if (index === currentTrackIndex && isPlayingState) {
+const handlePlaylistItemClick = (index, currentRenderedPlaylist) => {
+    const clickedTrack = currentRenderedPlaylist[index];
+
+    // Find the actual index of the clicked track in the original playlist to update currentTrackIndex
+    const actualIndexInFullPlaylist = playlist.findIndex(track => track.id === clickedTrack.id);
+     if (actualIndexInFullPlaylist === -1) {
+        console.error("Clicked track not found in the original playlist.");
+        return;
+    }
+
+
+    if (actualIndexInFullPlaylist === currentTrackIndex && isPlayingState) {
         pauseAudio();
         isPlayingState = false;
         if (playBtn) playBtn.innerHTML = '<i class="fa fa-play"></i>';
         if (disk) disk.classList.add("rotate");
     } else {
-        actualLoadAndPlayTrack(index);
+        actualLoadAndPlayTrack(clickedTrack); // Pass the track object
     }
-    highlightCurrentTrack(index); // Ensure correct item is highlighted with correct icon
+    // Highlight the track in the currently rendered playlist
+    highlightCurrentTrack(index);
 };
 
 const handlePlayPause = () => {
@@ -88,13 +105,46 @@ const handlePlayPause = () => {
 };
 
 const handleNextTrack = () => {
-    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-    actualLoadAndPlayTrack(currentTrackIndex);
+    if (currentRenderedPlaylist.length === 0) return; // Prevent errors if playlist is empty
+
+    // Find the index of the currently playing track within the currently rendered playlist
+    const currentTrackInRenderedIndex = currentRenderedPlaylist.findIndex(track => track.id === playlist[currentTrackIndex].id);
+
+    if (currentTrackInRenderedIndex === -1) {
+        console.error("Current track not found in the rendered playlist.");
+        // Fallback: if current track not in rendered list, just go to the first track of the rendered list
+        actualLoadAndPlayTrack(currentRenderedPlaylist[0]);
+        highlightCurrentTrack(0);
+        return;
+    }
+
+
+    const nextTrackInRenderedIndex = (currentTrackInRenderedIndex + 1) % currentRenderedPlaylist.length;
+    const nextTrack = currentRenderedPlaylist[nextTrackInRenderedIndex];
+
+    actualLoadAndPlayTrack(nextTrack);
+    highlightCurrentTrack(nextTrackInRenderedIndex);
 };
 
 const handlePrevTrack = () => {
-    currentTrackIndex = (currentTrackIndex - 1 + playlist.length + playlist.length) % playlist.length; // Ensure positive index
-    actualLoadAndPlayTrack(currentTrackIndex);
+     if (currentRenderedPlaylist.length === 0) return; // Prevent errors if playlist is empty
+
+    // Find the index of the currently playing track within the currently rendered playlist
+    const currentTrackInRenderedIndex = currentRenderedPlaylist.findIndex(track => track.id === playlist[currentTrackIndex].id);
+
+     if (currentTrackInRenderedIndex === -1) {
+        console.error("Current track not found in the rendered playlist.");
+         // Fallback: if current track not in rendered list, just go to the last track of the rendered list
+        actualLoadAndPlayTrack(currentRenderedPlaylist[currentRenderedPlaylist.length - 1]);
+        highlightCurrentTrack(currentRenderedPlaylist.length - 1);
+        return;
+    }
+
+    const prevTrackInRenderedIndex = (currentTrackInRenderedIndex - 1 + currentRenderedPlaylist.length) % currentRenderedPlaylist.length; // Ensure positive index
+    const prevTrack = currentRenderedPlaylist[prevTrackInRenderedIndex];
+
+    actualLoadAndPlayTrack(prevTrack);
+    highlightCurrentTrack(prevTrackInRenderedIndex);
 };
 
 const handleVolumeChange = (event) => { // event.target.value
@@ -130,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick);
+    currentRenderedPlaylist = renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick); // Assign returned value
     renderArtistSlides(playlist); // Call to render initial artist slides
 
     // The previous code for adding event listeners to slide divs is no longer needed
@@ -161,10 +211,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (volumeSlider) volumeSlider.addEventListener("input", handleVolumeChange);
 
     // Initial track setup (load first track but don't autoplay)
+    // Initial track setup (load first track but don't autoplay)
     const initialTrack = playlist[currentTrackIndex];
     if (initialTrack) {
-        setTrack(initialTrack);
-        updateNowPlaying(initialTrack);
+        actualLoadAndPlayTrack(initialTrack); // Use the updated function
+        // Highlight the initial track in the rendered playlist (which is the full playlist initially)
         highlightCurrentTrack(currentTrackIndex);
     }
 
@@ -221,7 +272,7 @@ const renderArtistSlides = (currentPlaylist) => {
         // Add click event listener to filter playlist by artist
         slideElement.addEventListener('click', () => {
             const filteredPlaylist = playlist.filter(track => track.artist === artist);
-            renderPlaylist(filteredPlaylist, 0, handlePlaylistItemClick); // Render filtered playlist, start at index 0
+            currentRenderedPlaylist = renderPlaylist(filteredPlaylist, 0, handlePlaylistItemClick); // Assign returned value
             // Optionally, update the playlist count text
             const playlistInfoElement = document.querySelector('.playlist p');
             if (playlistInfoElement) {
@@ -277,7 +328,7 @@ if (openBtn && modal && closeBtn) { // Add checks to ensure elements exist
                 };
 
                 playlist.push(newSong); // Add new song to the playlist array
-                renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick); // Re-render the main playlist
+                currentRenderedPlaylist = renderPlaylist(playlist, currentTrackIndex, handlePlaylistItemClick); // Re-render the main playlist and assign
                 renderArtistSlides(playlist); // Re-render artist slides
 
                 // Close the modal and clear the form
