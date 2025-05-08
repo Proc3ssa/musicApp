@@ -4,7 +4,7 @@ A simple web-based music player application built with HTML, CSS, and JavaScript
 
 ## Screenshots
 
-Here are some screenshots of the music player:
+Here is a screenshot of the music player:
 
 ![Screenshot 1](assets/images/screenshot.png)
 
@@ -77,6 +77,35 @@ This project follows a standard Git workflow with Pull Requests (PRs).
    - Address any feedback and make necessary changes.
    - Once approved, merge the PR.
 
+### Sample PR Workflow
+
+Here is a sample workflow for contributing via Pull Requests:
+
+1.  **Fetch and Rebase:**
+   ```bash
+   git fetch origin
+   git rebase origin/main
+   ```
+2.  **Create a New Branch:**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3.  **Make Changes and Commit:**
+   ```bash
+   # Make your code changes
+   git add .
+   git commit -m "feat: Add your feature"
+   ```
+4.  **Push Your Branch:**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+5.  **Create a Pull Request:**
+   - Go to the GitHub repository page.
+   - You will see a prompt to create a Pull Request from your pushed branch.
+   - Fill in the details, including a clear title and description.
+   - Submit the Pull Request for review.
+
 ## Testing
 
 The project uses Jest for unit testing.
@@ -93,8 +122,9 @@ The project uses Jest for unit testing.
 Test files are located in the `test/` directory and correspond to the modules in the `scripts/` directory.
 
 
-**Author:** 
-![Faisal](https://github.com/proc3ssa)
+## Author
 
-
+**Faisal**
+- GitHub: [Proc3ssa](https://github.com/proc3ssa)
+- LinkedIn: [Faisal](https://www.linkedin.com/in/faisal-a-b91a1a1b5/)
 

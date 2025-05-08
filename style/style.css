@@ -10,6 +10,64 @@ body{
     color: var(--text-color);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+ .modal {
+   display: none; 
+   position: fixed;
+   z-index: 1;
+   left: 0; top: 0;
+   width: 100%; height: 100%;
+   background-color: rgba(0, 0, 0, 0.5);
+ }
+
+ .modal-content {    
+   background-color: white;
+   margin: 10% auto;
+   padding: 20px;
+   border-radius: 10px;
+   width: 300px;
+   position: relative;
+ }
+
+ .close {
+   color: #aaa;
+   position: absolute;
+   right: 10px;
+   top: 10px;
+   font-size: 20px;
+   cursor: pointer;
+ }
+
+ .modal-form input{
+   width: 100%;
+   padding: 8px;
+   margin: 8px 0;
+   box-sizing: border-box;
+   background-color: transparent;
+   border: 1px solid gray;
+   border-radius: 3px;
+
+ }
+ .modal-form input[type="file"]{
+   width: 70%;
+ }
+
+ .modal-form button{
+   background-color: #0056b3;
+   color: white;
+   border: none;
+   padding: 7px;
+   width: 90px;
+   cursor: pointer;
+   border-radius: 3px;
+ }
+ .modal-form button:hover{
+   padding:8px;
+   box-shadow: 0px 5px 9px gray;
+ }
+
+ .modal-form button[type="submit"]:hover {
+   background-color: #0056b3;
+ }
 main{
     background-color: var(--acsent-color);
     width: 80%;
@@ -17,6 +75,19 @@ main{
     display:flex;
     border-radius: 10px;
     
+}
+
+.settings button{
+   border: none;
+   padding: 6px;
+   border-radius: 5px;
+   color: black;
+   background: linear-gradient(rgba(107, 150, 230, 0.5), rgba(181, 201, 240, 0.5));
+}
+
+.settings button:hover{
+  padding: 7px;
+  box-shadow: 1px 5px 8px rgba(128, 128, 128, 0.363);
 }
 
  section{
@@ -232,10 +303,6 @@ button.play:hover{
    width: 41px;
 }
 
-.fa-forward:hover, .fa-backward:hover{
-
-}
-
 .song{
    background-color: var(--acsent-color);
    border-radius: 5px;
@@ -296,9 +363,7 @@ button.play:hover{
    
 }
 
-/* Add these styles to your style.css file */
 
-/* Playlist song styling */
 .playlist .song {
    cursor: pointer;
    transition: all 0.3s ease;
@@ -311,7 +376,7 @@ button.play:hover{
    background-color: rgba(255, 255, 255, 0.658);
  }
  
- /* Active song styling */
+ 
  .playlist .song.active {
    background-color: rgba(196, 210, 248, 0.836);
    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
@@ -324,7 +389,7 @@ button.play:hover{
    font-weight: bold;
  }
  
- /* Animation for the disc */
+ 
  @keyframes rotate {
    from {
      transform: rotate(0deg);
@@ -376,6 +441,7 @@ button.play:hover{
    cursor: pointer;
  }
  
+
  .volume-slider::-moz-range-thumb {
    width: 15px;
    height: 15px;
@@ -443,9 +509,6 @@ input[type="search"]{
    
    
 }
-
-
-
 
  }
  
