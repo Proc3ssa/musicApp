@@ -73,13 +73,13 @@ describe('handlePlaylistItemClick', () => {
     playlist.currentTrackIndex = 0;
 
     // Simulate click on same track
-    handlePlaylistItemClick(0);
+    handlePlaylistItemClick(0, playlist);
     expect(player.pauseAudio).toHaveBeenCalled();
   });
 
   it('should play a new track if different index is clicked', async () => {
     await loadAndPlayTrack(0); // ensure currentTrackIndex = 0
-    handlePlaylistItemClick(1);
+    handlePlaylistItemClick(1, playlist);
     expect(player.setTrack).toHaveBeenCalled();
   });
 });
